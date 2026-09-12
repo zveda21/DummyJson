@@ -1,0 +1,201 @@
+[
+  {
+    "caseId": "AUTH-002",
+    "roleKey": "userA",
+    "method": "GET",
+    "endpointTemplate": "/auth/me",
+    "pathParams": {},
+    "body": null,
+    "expectedStatus": 200,
+    "expectationType": "DOCUMENTED_CONTRACT",
+    "priority": "HIGH",
+    "description": "Verify that a valid authenticated user can access the protected /auth/me endpoint and receive their authenticated user profile.",
+    "owaspCategories": [
+      "API2:2023 - Broken Authentication"
+    ],
+    "rationale": "A valid authentication token should be accepted and /auth/me should return the authenticated user's profile."
+  },
+  {
+    "caseId": "AUTH-004",
+    "roleKey": "userB",
+    "method": "GET",
+    "endpointTemplate": "/auth/me",
+    "pathParams": {},
+    "body": null,
+    "expectedStatus": 200,
+    "expectationType": "SECURITY_EXPECTATION",
+    "priority": "CRITICAL",
+    "description": "Verify that the authenticated identity returned by /auth/me matches the user associated with the authentication context.",
+    "owaspCategories": [
+      "API2:2023 - Broken Authentication"
+    ],
+    "rationale": "A valid authentication token must resolve to the correct authenticated user and must not expose another user's identity."
+  },
+  {
+    "caseId": "OWN-001",
+    "roleKey": "userA",
+    "method": "GET",
+    "endpointTemplate": "/users/{id}",
+    "pathParams": {
+      "id": "{{userB.id}}"
+    },
+    "body": null,
+    "expectedStatus": 403,
+    "expectationType": "SECURITY_HYPOTHESIS",
+    "priority": "HIGH",
+    "description": "Verify that a standard user cannot access another user's protected resource.",
+    "owaspCategories": [
+      "API1:2023 - Broken Object Level Authorization"
+    ],
+    "rationale": "A standard user should not access another user's protected resource unless explicitly permitted."
+  },
+  {
+    "caseId": "OWN-002",
+    "roleKey": "userA",
+    "method": "GET",
+    "endpointTemplate": "/users/{id}",
+    "pathParams": {
+      "id": "{{userA.id}}"
+    },
+    "body": null,
+    "expectedStatus": 200,
+    "expectationType": "DOCUMENTED_CONTRACT",
+    "priority": "HIGH",
+    "description": "Verify that an authenticated user can retrieve their own user resource using their valid user ID.",
+    "owaspCategories": [
+      "API1:2023 - Broken Object Level Authorization"
+    ],
+    "rationale": "An authenticated user should be able to retrieve the user resource identified by their own valid user ID."
+  },
+  {
+    "caseId": "RBAC-001",
+    "roleKey": "userA",
+    "method": "DELETE",
+    "endpointTemplate": "/users/{id}",
+    "pathParams": {
+      "id": "{{userB.id}}"
+    },
+    "body": null,
+    "expectedStatus": 403,
+    "expectationType": "SECURITY_HYPOTHESIS",
+    "priority": "CRITICAL",
+    "description": "Verify that a standard user cannot delete another user's account.",
+    "owaspCategories": [
+      "API1:2023 - Broken Object Level Authorization",
+      "API5:2023 - Broken Function Level Authorization"
+    ],
+    "rationale": "A standard user should not be able to delete another user's account. A 403 response represents the expected production authorization boundary."
+  },
+  {
+    "caseId": "RBAC-002",
+    "roleKey": "userB",
+    "method": "DELETE",
+    "endpointTemplate": "/users/{id}",
+    "pathParams": {
+      "id": "{{userA.id}}"
+    },
+    "body": null,
+    "expectedStatus": 403,
+    "expectationType": "SECURITY_HYPOTHESIS",
+    "priority": "CRITICAL",
+    "description": "Verify that authorization is consistently enforced when a different standard user attempts to delete another user's account.",
+    "owaspCategories": [
+      "API1:2023 - Broken Object Level Authorization",
+      "API5:2023 - Broken Function Level Authorization"
+    ],
+    "rationale": "Authorization must be enforced consistently regardless of which standard user attempts to delete another user's account."
+  },
+  {
+    "caseId": "RBAC-003",
+    "roleKey": "userA",
+    "method": "PATCH",
+    "endpointTemplate": "/users/{id}",
+    "pathParams": {
+      "id": "{{userB.id}}"
+    },
+    "body": {
+      "role": "admin"
+    },
+    "expectedStatus": 403,
+    "expectationType": "SECURITY_HYPOTHESIS",
+    "priority": "CRITICAL",
+    "description": "Verify that a standard user cannot modify another user's role or elevate another user's privileges.",
+    "owaspCategories": [
+      "API1:2023 - Broken Object Level Authorization",
+      "API3:2023 - Broken Object Property Level Authorization"
+    ],
+    "rationale": "A standard user must not be able to modify another user's authorization role or elevate another account's privileges."
+  },
+  {
+    "caseId": "RBAC-004",
+    "roleKey": "moderator",
+    "method": "DELETE",
+    "endpointTemplate": "/users/{id}",
+    "pathParams": {
+      "id": "{{admin.id}}"
+    },
+    "body": null,
+    "expectedStatus": 403,
+    "expectationType": "SECURITY_HYPOTHESIS",
+    "priority": "HIGH",
+    "description": "Verify that a moderator cannot perform administrator-level account deletion against an administrator account.",
+    "owaspCategories": [
+      "API5:2023 - Broken Function Level Authorization"
+    ],
+    "rationale": "A moderator should not have administrator-level privileges to delete user accounts."
+  },
+  {
+    "caseId": "RBAC-005",
+    "roleKey": "userA",
+    "method": "PATCH",
+    "endpointTemplate": "/users/{id}",
+    "pathParams": {
+      "id": "{{userA.id}}"
+    },
+    "body": {
+      "role": "admin"
+    },
+    "expectedStatus": 403,
+    "expectationType": "SECURITY_HYPOTHESIS",
+    "priority": "CRITICAL",
+    "description": "Verify that a standard user cannot elevate their own privileges by changing their role to administrator.",
+    "owaspCategories": [
+      "API3:2023 - Broken Object Property Level Authorization"
+    ],
+    "rationale": "A standard user must not be able to elevate their own privileges by changing their role to administrator."
+  },
+  {
+    "caseId": "NEG-001",
+    "roleKey": "userA",
+    "method": "GET",
+    "endpointTemplate": "/users/{id}",
+    "pathParams": {
+      "id": "999999"
+    },
+    "body": null,
+    "expectedStatus": 404,
+    "expectationType": "DOCUMENTED_CONTRACT",
+    "priority": "MEDIUM",
+    "description": "Verify that requesting a non-existent user resource returns a safe not-found response.",
+    "owaspCategories": [],
+    "rationale": "A non-existent resource ID should fail safely with a not-found response and should not expose unnecessary information about the underlying data set."
+  },
+  {
+    "caseId": "EXP-001",
+    "roleKey": "userA",
+    "method": "GET",
+    "endpointTemplate": "/users/{id}",
+    "pathParams": {
+      "id": "{{userA.id}}"
+    },
+    "body": null,
+    "expectedStatus": 200,
+    "expectationType": "SECURITY_EXPECTATION",
+    "priority": "HIGH",
+    "description": "Verify that the authenticated user's profile does not expose sensitive personal, credential, or financial information.",
+    "owaspCategories": [
+      "API3:2023 - Broken Object Property Level Authorization"
+    ],
+    "rationale": "The authenticated user resource should be retrievable, but sensitive fields such as passwords and other credential material must not be unnecessarily exposed. Sensitive-field validation is performed independently from the status assertion."
+  }
+]
