@@ -165,6 +165,24 @@
     "rationale": "A standard user must not be able to elevate their own privileges by changing their role to administrator."
   },
   {
+    "caseId": "RBAC-006",
+    "roleKey": "admin",
+    "method": "DELETE",
+    "endpointTemplate": "/users/{id}",
+    "pathParams": {
+      "id": "{{userA.id}}"
+    },
+    "body": null,
+    "expectedStatus": 200,
+    "expectationType": "SECURITY_EXPECTATION",
+    "priority": "HIGH",
+    "description": "Verify that an administrator can perform an authorized user-account deletion.",
+    "owaspCategories": [
+      "API5:2023 - Broken Function Level Authorization"
+    ],
+    "rationale": "The administrator role is authorized to delete user accounts, while lower-privileged roles are expected to be denied. This test verifies that the administrative authorization boundary permits the intended operation."
+  },
+  {
     "caseId": "NEG-001",
     "roleKey": "userA",
     "method": "GET",
@@ -179,6 +197,40 @@
     "description": "Verify that requesting a non-existent user resource returns a safe not-found response.",
     "owaspCategories": [],
     "rationale": "A non-existent resource ID should fail safely with a not-found response and should not expose unnecessary information about the underlying data set."
+  },
+  {
+    "caseId": "NEG-002",
+    "roleKey": "userA",
+    "method": "GET",
+    "endpointTemplate": "/users/{id}",
+    "pathParams": {
+      "id": "abc"
+    },
+    "body": null,
+    "expectedStatus": 400,
+    "expectationType": "SECURITY_EXPECTATION",
+    "priority": "MEDIUM",
+    "description": "Verify that a non-numeric user ID is rejected safely rather than causing an unhandled error or an unexpected match.",
+    "owaspCategories": [
+      "API8:2023 - Security Misconfiguration"
+    ],
+    "rationale": "Not documented by DummyJSON. Stated expectation: a syntactically invalid identifier should fail safely with a client error (400) rather than a 200, or a 500 that could leak implementation detail such as a stack trace."
+  },
+  {
+    "caseId": "NEG-003",
+    "roleKey": "userA",
+    "method": "GET",
+    "endpointTemplate": "/users/{id}",
+    "pathParams": {
+      "id": "-1"
+    },
+    "body": null,
+    "expectedStatus": 404,
+    "expectationType": "SECURITY_EXPECTATION",
+    "priority": "LOW",
+    "description": "Verify that a negative, syntactically valid but semantically impossible user ID fails safely as not-found.",
+    "owaspCategories": [],
+    "rationale": "Not documented by DummyJSON. Stated expectation: a negative ID can never correspond to a real resource, so it should behave the same as any other non-existent ID (404), not surface a different or more permissive code path."
   },
   {
     "caseId": "EXP-001",

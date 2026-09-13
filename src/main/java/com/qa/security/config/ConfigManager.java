@@ -37,4 +37,39 @@ public final class ConfigManager {
     public static String getBaseUrl() {
         return PROPERTIES.getProperty("base.url");
     }
+
+    /**
+     * Connection timeout in milliseconds. Defaults to 5000ms if not
+     * configured, so the suite still fails fast even if the property
+     * is accidentally omitted.
+     */
+    public static int getConnectTimeoutMs() {
+        return getIntProperty("http.connect.timeout.ms", 5000);
+    }
+
+    /**
+     * Socket/read timeout in milliseconds. Must comfortably exceed the
+     * documented `delay` query param range DummyJSON exposes (0-5000ms)
+     * or resilience tests exercising it will fail for the wrong reason.
+     */
+    public static int getReadTimeoutMs() {
+        return getIntProperty("http.read.timeout.ms", 10000);
+    }
+
+    private static int getIntProperty(String key, int defaultValue) {
+        String raw = PROPERTIES.getProperty(key);
+
+        if (raw == null || raw.isBlank()) {
+            return defaultValue;
+        }
+
+        try {
+            return Integer.parseInt(raw.trim());
+        } catch (NumberFormatException e) {
+            throw new IllegalStateException(
+                    "Configuration property '%s' is not a valid integer: %s"
+                            .formatted(key, raw)
+            );
+        }
+    }
 }

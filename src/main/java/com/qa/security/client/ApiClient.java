@@ -1,13 +1,12 @@
 package com.qa.security.client;
 
-
+import com.qa.security.utils.LoggerManager;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.apache.logging.log4j.Logger;
-import com.qa.security.utils.LoggerManager;
 
 import static com.qa.security.config.ConfigManager.getBaseUrl;
 
@@ -287,6 +286,32 @@ public class ApiClient {
                         "(?i)(\"?authorization\"?\\s*[:=]\\s*)[^,}\\s]+",
                         "$1***"
                 );
+    }
+
+    /**
+     * Sends a request with a literal, unvalidated string body and an
+     * explicit content type.
+     * Used only by boundary/negative tests that need to exercise genuinely
+     * malformed JSON or an unexpected content type.
+     */
+    public Response sendRaw(String method,
+                            String endpoint,
+                            String rawBody,
+                            String contentType) {
+        return execute(method, endpoint, rawBody,
+                () -> {
+                    RequestSpecification spec = RestAssured
+                            .given()
+                            .baseUri(getBaseUrl())
+                            .header("Content-Type", contentType);
+                    if (authToken != null) {
+                        spec = spec.header("Authorization", "Bearer " + authToken);
+                    }
+                    if (rawBody != null) {
+                        spec = spec.body(rawBody);
+                    }
+                    return spec.request(method, endpoint);
+                });
     }
 
     @FunctionalInterface
