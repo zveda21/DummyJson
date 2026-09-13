@@ -57,7 +57,7 @@ Dependency versions are defined in `pom.xml`.
 
 ```bash
 git clone https://github.com/zveda21/DummyJson.git
-cd dummyjson-api-security
+cd DummyJson
 mvn -q dependency:resolve
 ```
 ## Repository
