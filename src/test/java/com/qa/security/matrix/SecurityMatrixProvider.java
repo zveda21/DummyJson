@@ -1,7 +1,7 @@
 package com.qa.security.matrix;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.testng.annotations.DataProvider;
 
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Loads the security matrix from an external JSON resource and exposes it as a
  * TestNG @DataProvider, so new cases can be added by editing data, not test code.
- *
+ * <p>
  * File lives at: src/test/resources/matrix/security-matrix.json
  */
 public final class SecurityMatrixProvider {
@@ -24,7 +24,8 @@ public final class SecurityMatrixProvider {
 
     /**
      * TestNG data provider. Reference from a test method with:
-     *   @Test(dataProvider = "securityMatrix", dataProviderClass = SecurityMatrixProvider.class)
+     *
+     * @Test(dataProvider = "securityMatrix", dataProviderClass = SecurityMatrixProvider.class)
      */
     @DataProvider(name = "securityMatrix")
     public static Object[][] rows() {
@@ -43,7 +44,9 @@ public final class SecurityMatrixProvider {
         }
     }
 
-    /** TestNG data providers must return Object[][] - one row = one Object[] with one element. */
+    /**
+     * TestNG data providers must return Object[][] - one row = one Object[] with one element.
+     */
     private static Object[][] toDataProviderFormat(List<SecurityMatrixRow> matrixRows) {
         Object[][] data = new Object[matrixRows.size()][1];
         for (int i = 0; i < matrixRows.size(); i++) {

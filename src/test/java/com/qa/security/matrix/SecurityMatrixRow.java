@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  * One row of the data-driven security matrix.
- *
+ * <p>
  * The matrix describes:
  * - who is performing the request
  * - what endpoint/method is being accessed

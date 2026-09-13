@@ -2,16 +2,12 @@ package com.qa.security.test;
 
 import com.qa.security.assertions.ApiAssertions;
 import com.qa.security.client.ApiClient;
+import com.qa.security.constants.ApiEndpoints;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import com.qa.security.constants.ApiEndpoints;
-import com.qa.security.constants.HttpStatusCodes;
-
-import java.util.Map;
 
 import static com.qa.security.constants.HttpStatusCodes.UNAUTHORIZED;
-import static io.restassured.RestAssured.given;
 
 public class AuthenticationSecurityTest extends BaseSecurityTest {
 

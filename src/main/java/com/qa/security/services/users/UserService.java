@@ -24,7 +24,9 @@ public class UserService extends BaseService {
         return apiClient.delete(ApiEndpoints.USER_BY_ID.replace("{id}", String.valueOf(id)));
     }
 
-    /** Fetches the full user directory (limit=0 = no pagination cap) for role discovery. */
+    /**
+     * Fetches the full user directory (limit=0 = no pagination cap) for role discovery.
+     */
     public UsersListResponse getAllUsers() {
         Response response = apiClient.get(ApiEndpoints.USERS + "?limit=0");
         return response.as(UsersListResponse.class);

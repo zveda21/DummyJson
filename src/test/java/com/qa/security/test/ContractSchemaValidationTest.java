@@ -16,7 +16,7 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
-public class ContractSchemaValidationTest  extends BaseSecurityTest {
+public class ContractSchemaValidationTest extends BaseSecurityTest {
 
     /**
      * Validates that the authenticated user's response matches the expected user contract

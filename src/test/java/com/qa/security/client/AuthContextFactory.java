@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Builds an authenticated ApiClient per role.
- *
+ * <p>
  * Normal authenticated clients are cached for the lifetime of this
  * factory instance. Short-lived clients created with an explicit
  * expiration are not cached because they are intended for specific
@@ -61,7 +61,7 @@ public class AuthContextFactory {
     /**
      * Creates a non-cached authenticated client with
      * a custom token expiration time.
-     *
+     * <p>
      * Used by authentication tests such as expired-token validation.
      */
     public ApiClient forRoleWithExpiry(

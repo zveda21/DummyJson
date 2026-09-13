@@ -1,7 +1,6 @@
 package com.qa.security.client;
 
 import com.qa.security.models.response.users.UserSummary;
-import com.qa.security.models.response.users.UsersListResponse;
 import com.qa.security.services.users.UserService;
 
 import java.util.List;

@@ -87,13 +87,13 @@ public class NegativeBoundaryTest extends BaseSecurityTest {
 
     /**
      * Verifies that injection-style credentials cannot bypass authentication.
-     *  Security expectation:
-     *  - Injection-style username/password values must not authenticate successfully.
-     *  - The request must be rejected as invalid credentials/input.
-     *   Note:
-     *  This test demonstrates that the supplied injection-style payload
-     *  does not result in authentication bypass. It does not claim to
-     *  prove that every possible injection vector is impossible.
+     * Security expectation:
+     * - Injection-style username/password values must not authenticate successfully.
+     * - The request must be rejected as invalid credentials/input.
+     * Note:
+     * This test demonstrates that the supplied injection-style payload
+     * does not result in authentication bypass. It does not claim to
+     * prove that every possible injection vector is impossible.
      */
     @Test(description = "NEG-006 - Verify injection-style credentials cannot bypass authentication")
     public void verifyInjectionStyleLoginInputCannotBypassAuthentication() {

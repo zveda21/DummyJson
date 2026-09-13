@@ -5,57 +5,20 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-///**
-// * TEST: resolves {{placeholder}} tokens in a matrix row's pathParams against
-// * runtime values captured once per test class in @BeforeClass.
-// */
-//public class MatrixContext {
-//
-//    private static final Pattern PLACEHOLDER = Pattern.compile("\\{\\{(.+?)}}");
-//
-//    private final Map<String, Object> values = new HashMap<>();
-//
-//    public void put(String key, Object value) {
-//        values.put(key, value);
-//    }
-//
-//    public SecurityMatrixRow resolve(SecurityMatrixRow row) {
-//        Map<String, Object> resolvedParams = new HashMap<>();
-//        if (row.pathParams() != null) {
-//            row.pathParams().forEach((k, v) -> resolvedParams.put(k, resolveValue(v)));
-//        }
-//        return new SecurityMatrixRow(
-//                row.caseId(), row.roleKey(), row.method(), row.endpointTemplate(),
-//                resolvedParams, row.body(), row.expectedStatus(), row.rationale());
-//    }
-//
-//    private Object resolveValue(Object raw) {
-//        if (!(raw instanceof String s)) return raw;
-//        Matcher m = PLACEHOLDER.matcher(s);
-//        if (!m.matches()) return raw;
-//        String key = m.group(1);
-//        if (!values.containsKey(key)) {
-//            throw new IllegalStateException(
-//                    "Matrix row references '%s' but it was never captured in MatrixContext.".formatted(key));
-//        }
-//        return values.get(key);
-//    }
-//}
-
 /**
  * Resolves {{placeholder}} tokens in a security matrix row's path parameters
  * against runtime values captured during test setup.
- *
+ * <p>
  * Example:
- *
+ * <p>
  * "id": "{{userB.id}}"
- *
+ * <p>
  * can be resolved from:
- *
+ * <p>
  * context.put("userB.id", 15);
- *
+ * <p>
  * resulting in:
- *
+ * <p>
  * "id": 15
  */
 public class MatrixContext {

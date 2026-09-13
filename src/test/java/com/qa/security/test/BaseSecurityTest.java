@@ -6,15 +6,14 @@ import com.qa.security.client.AuthContextFactory;
 import com.qa.security.constants.ApiEndpoints;
 import com.qa.security.matrix.MatrixContext;
 import com.qa.security.matrix.SecurityMatrixRow;
-import com.qa.security.utils.LoggerManager;
+import com.qa.security.utils.AllureReportCleaner;
 import com.qa.security.utils.AllureTestReporter;
+import com.qa.security.utils.LoggerManager;
 import com.qa.security.utils.SecurityFindingReporter;
 import io.qameta.allure.Allure;
 import io.restassured.response.Response;
 import org.apache.logging.log4j.Logger;
 import org.testng.annotations.BeforeClass;
-
-import com.qa.security.utils.AllureReportCleaner;
 import org.testng.annotations.BeforeSuite;
 
 import java.util.List;
@@ -23,9 +22,9 @@ import java.util.regex.Pattern;
 
 /**
  * Base class for security tests.
- *
+ * <p>
  * TestNG creates one instance of this class per test subclass.
- *
+ * <p>
  * Authentication contexts and runtime user IDs are resolved lazily.
  * A test class only authenticates the roles it actually needs.
  */
@@ -33,12 +32,10 @@ public abstract class BaseSecurityTest {
 
     private static final Pattern CONTEXT_PLACEHOLDER =
             Pattern.compile("\\{\\{(.+?)}}");
-
-    protected AuthContextFactory authFactory;
-    protected MatrixContext matrixContext;
-
     protected final Logger logger =
             LoggerManager.getLogger(getClass());
+    protected AuthContextFactory authFactory;
+    protected MatrixContext matrixContext;
 
     @BeforeSuite(alwaysRun = true)
     public void cleanAllureResults() {
@@ -297,7 +294,7 @@ public abstract class BaseSecurityTest {
     /**
      * Validates that a successful user-resource response
      * does not expose sensitive information.
-     *
+     * <p>
      * A detected sensitive field is treated as a security
      * finding and fails the test invocation.
      */
@@ -365,26 +362,20 @@ public abstract class BaseSecurityTest {
 
         return switch (row.method().toUpperCase()) {
 
-            case "GET" ->
-                    client.get(endpoint);
+            case "GET" -> client.get(endpoint);
 
-            case "POST" ->
-                    client.post(endpoint, row.body());
+            case "POST" -> client.post(endpoint, row.body());
 
-            case "PUT" ->
-                    client.put(endpoint, row.body());
+            case "PUT" -> client.put(endpoint, row.body());
 
-            case "PATCH" ->
-                    client.patch(endpoint, row.body());
+            case "PATCH" -> client.patch(endpoint, row.body());
 
-            case "DELETE" ->
-                    client.delete(endpoint);
+            case "DELETE" -> client.delete(endpoint);
 
-            default ->
-                    throw new IllegalArgumentException(
-                            "Unsupported method: "
-                                    + row.method()
-                    );
+            default -> throw new IllegalArgumentException(
+                    "Unsupported method: "
+                            + row.method()
+            );
         };
     }
 
@@ -396,7 +387,7 @@ public abstract class BaseSecurityTest {
     /**
      * Validates that /auth/me returns the identity associated
      * with the authenticated security context.
-     *
+     * <p>
      * HTTP 200 only confirms that authentication was accepted.
      * This validation confirms that the authenticated identity
      * is also correct.
